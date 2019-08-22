@@ -218,6 +218,4 @@ $(document).ready(function () {
     });
   }
   document.onkeydown = KeyPress;
-
-
 })
