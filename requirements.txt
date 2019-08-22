@@ -1,0 +1,7 @@
+flask
+google-cloud-storage
+google-cloud-vision
+Pillow
+google-api-python-client
+opencv-python
+scikit-image
