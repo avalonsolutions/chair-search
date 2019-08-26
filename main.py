@@ -48,7 +48,7 @@ def generate():
 
     cropped_sketch = crop_and_resize(sketch)
     model_input = {'image_bytes': {'b64': cropped_sketch}}
-    generated_chair = predict_json(project="chair-search-demo", model="chair_generation", input=model_input)
+    generated_chair = predict_json(project="chair-search-demo", model="chair_generation", input=model_input, version=cfg.MODEL_VERSION)
 
     # Get similar products and filter to top 3
     similar_products = get_similar_products(cfg.PRODUCT_SET_ID, generated_chair)  # Generated chair
