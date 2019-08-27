@@ -18,13 +18,15 @@ $(document).ready(function () {
   })
   $("#clean").click(function () {
     // $('#img1').attr("hidden", true);
-    $('.image').each(function(index) {
+    $('.image').each(function (index) {
       var img = $(this).find('img')[0];
       img.setAttribute('hidden', true);
       img.setAttribute('src', '');
       var title = $(this).find('h4')[0]
-      title.innerHTML = ""; 
+      title.innerHTML = "";
     })
+    $('#generated').attr('src', '');
+    $('#generated-title').attr('hidden', 'true');
     clickX.length = 0;
     clickY.length = 0;
     clickDrag.length = 0;
@@ -229,12 +231,15 @@ $(document).ready(function () {
           console.log('Your file was successfully uploaded!');
           // Add new b64 encoded chairs to page
           // var a = ["a", "b", "c"];
-          $('.image').each(function(index) {
+          console.log(data)
+          $('#generated-title').removeAttr('hidden');
+          $('#generated').attr('src', data['generated_chair']);
+          $('.image').each(function (index) {
             var img = $(this).find('img')[0]
             var title = $(this).find('h4')[0]
             img.setAttribute("src", data.results[index]['src'])
             img.removeAttribute('hidden')
-            title.innerHTML = data.results[index]['name']; 
+            title.innerHTML = data.results[index]['name'];
             img.setAttribute("src", data.results[index]['src'])
             console.log(img);
           });
