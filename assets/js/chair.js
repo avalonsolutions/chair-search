@@ -195,6 +195,8 @@ $(document).ready(function () {
   }
 
   function canvasToImg() {
+    console.log('+++');
+    $("#loaderdiv").attr('class', 'loading');
     // "Hack" to get a white background for the exported canvas DataURL
     //create a dummy CANVAS
     destinationCanvas = document.createElement("canvas");
