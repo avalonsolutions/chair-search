@@ -13,5 +13,7 @@ handlers:
   script: auto
   secure: always
 
+instance_class: F2
+
 env_variables:
   RUNNING_ON_GCP: True

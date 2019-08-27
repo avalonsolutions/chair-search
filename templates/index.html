@@ -1,64 +1,185 @@
-<!doctype html>
-
+<!DOCTYPE HTML>
 <html>
 
 <head>
-    <title>Chair Search Demo</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='scripts/script.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='scripts/inobounce.js') }}"></script>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/style.css') }}">
-    <!-- <meta name="apple-mobile-web-app-capable" content="yes"> -->
-    <!-- <script src="{{ url_for('static', filename='sripts/script.js') }}"></script>
-    <link type="text/css" rel="stylesheet"
-          href="{{ url_for('static', filename='styles/style.css') }}"> -->
+	<title>Avalon Solutions</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<link rel="stylesheet" href="assets/css/main.css" />
+	<!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/style.css') }}"> -->
+	<noscript>
+		<link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
 </head>
 
-<body>
-    <div class="container-fluid row ">
-        <div class="container">
-            <div class="row">
-                <div class="col-xs-12 text-holder">
-                    <img src="{{ url_for('static', filename='styles/images/avalon-logo.png') }}" alt="alt" height="100" width="150">
-                    <p>
-                        Draw your chair
-                    </p>
-                </div>
-                <div class="ajax-button">
-                    <input id="undo" class="test" type="button" value="Undo" />
-                </div>
-            </div>
-            <div class="row">
-                <canvas id="canvas" width="1000" height="1000"></canvas>
-            </div>
-            <div class="row">
-                <div class="col-xs-12 button-holder">
-                    <div class="ajax-button">
-                        <div class="fa fa-check done"></div>
-                        <div class="fa fa-close failed"></div>
-                        <input id="submit" class="submit" type="submit" value="Submit" />
-                    </div>
-                </div>
-            </div>
-            {% if images %}
-            <div class="row" id="matches">
-                <div class="col-xs-12 text-holder">
-                    <p>
-                        Found chairs
-                    </p>
-                    {% for img in images %} img {% endfor %}
-                </div>
-            </div>
-            {% endif %}
-            <div class="row">
-                <div class="col-xs-12 button-holder">
-                    <div class="ajax-button">
-                        <input id="test" class="test" type="button" value="Draw" />
-                    </div>
-                </div>
+<body class="is-preload">
 
-            </div>
-        </div>
-    </div>
+	<!-- Sidebar -->
+	<section id="sidebar">
+		<div class="inner">
+			<nav>
+				<ul>
+					<li><a href="#intro">Welcome</a></li>
+					<li><a href="#one">Draw</a></li>
+					<li><a href="#two">Results</a></li>
+					<li><a href="#three">Get in touch</a></li>
+				</ul>
+			</nav>
+		</div>
+	</section>
+
+	<!-- Wrapper -->
+	<div id="wrapper">
+
+		<!-- Intro -->
+		<section id="intro" class="wrapper style1 fullscreen fade-up">
+			<div class="inner">
+				<h1>Avalon Solutions</h1>
+				<p>We at <a href="https://www.avalonsolutions.com/">Avalon</a> are making really cool stuf blah blah<br /> Play a little
+					game to discover immense power of the cloud</a>.</p>
+				<ul class="actions">
+					<li><a href="#one" class="button scrolly">Let's play!</a></li>
+				</ul>
+			</div>
+		</section>
+
+		<!-- One -->
+		<section id="one" class="wrapper style2 spotlights">
+			<section>
+				<div class="content">
+					<div class="inner">
+						<h2>Draw a chair</h2>
+						<p>Use your imagination to draw a chair and nothing else blah blah We will use AI to blah blah</p>
+					</div>
+				</div>
+			</section>
+
+			<section>
+				<canvas id="canvas" height="800" width="1600" style="color:#ffffff;background: #ffffff;"></canvas>
+			</section>
+
+			<section>
+				<div class="content">
+					<div class="inner">
+						<ul class="actions">
+							<li><a class="button" id="submit">Submit</a></li>
+							<li><a class="button" id="clean">Clean</a></li>
+							<li><a class="button" id="random">Random</a></li>
+						</ul>
+					</div>
+				</div>
+			</section>
+		</section>
+
+		<!-- Two -->
+		<section id="two" class="wrapper style3 fade-up">
+			<div class="inner">
+				<h2>Results</h2>
+				<p>Best matches are...</p>
+				<h4 id="generated-title" hidden="true">Your GAN generated chair</h4>
+				<img id="generated" src="" style="display: block; margin-bottom: 10px; margin-left: auto; margin-right: auto; width: 50%; max-width: 50%">
+
+				<div class="features">
+					<section class="image">
+						<h4></h4>
+						<img src="" style="max-width: 100%" hidden="true">
+					</section>
+					<section class="image">
+						<h4></h4>
+						<img src="" style="max-width: 100%" hidden="true">
+					</section>
+					<section class="image">
+						<h4></h4>
+						<img src="" style="max-width: 100%" hidden="true">
+					</section>
+					<section class="image">
+						<h4></h4>
+						<img src="" style="max-width: 100%" hidden="true">
+					</section>
+
+				</div>
+			</div>
+		</section>
+
+		<!-- Three -->
+		<section id="three" class="wrapper style1 fade-up">
+			<div class="inner">
+				<h2>Get in touch</h2>
+				<p>Want to build smth cool bla bla..</p>
+				<div class="split style1">
+					<section>
+						<form method="post" action="#">
+							<div class="fields">
+								<div class="field half">
+									<label for="name">Name</label>
+									<input type="text" name="name" id="name" />
+								</div>
+								<div class="field half">
+									<label for="email">Email</label>
+									<input type="text" name="email" id="email" />
+								</div>
+								<div class="field">
+									<label for="message">Message</label>
+									<textarea name="message" id="message" rows="5"></textarea>
+								</div>
+							</div>
+							<ul class="actions">
+								<li><a href="" class="button submit">Send Message</a></li>
+							</ul>
+						</form>
+					</section>
+					<section>
+						<ul class="contact">
+							<li>
+								<h3>Address</h3>
+								<span>cool gata<br /> Stockholm
+									<br /> Sweden
+								</span>
+							</li>
+							<li>
+								<h3>Email</h3>
+								<a href="#">@avalonsolutions...</a>
+							</li>
+							<li>
+								<h3>Phone</h3>
+								<span>(000) 000-0000</span>
+							</li>
+							<li>
+								<h3>Social</h3>
+								<ul class="icons">
+									<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+									<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
+									<li><a href="#" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+									<li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
+									<li><a href="#" class="icon brands fa-linkedin-in"><span class="label">LinkedIn</span></a></li>
+								</ul>
+							</li>
+						</ul>
+					</section>
+				</div>
+			</div>
+		</section>
+
+	</div>
+
+	<!-- Footer -->
+	<footer id="footer" class="wrapper style1-alt">
+		<div class="inner">
+			<ul class="menu">
+				<li>&copy; AVALON. All rights reserved.</li>
+				<li>Made by: <a href="your linkedin">Elias...</a></li>
+			</ul>
+		</div>
+	</footer>
+
+	<!-- Scripts -->
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/jquery.scrollex.min.js"></script>
+	<script src="assets/js/jquery.scrolly.min.js"></script>
+	<script src="assets/js/browser.min.js"></script>
+	<script src="assets/js/breakpoints.min.js"></script>
+	<script src="assets/js/util.js"></script>
+	<script src="assets/js/main.js"></script>
+	<script src="assets/js/chair.js"></script>
 </body>
+
 </html>
