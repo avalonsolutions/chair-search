@@ -13,7 +13,7 @@ from config import config as cfg
 if not os.getenv("RUNNING_ON_GCP"):
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = cfg.LOCAL_CREDENTIALS
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='assets')
 
 storage_client = storage.Client(project=cfg.PROJECT_ID)
 
@@ -26,9 +26,9 @@ def root():
 
 @app.route('/autoDraw')
 def auto_draw():
-    files = os.listdir("static/static_chairs")
+    files = os.listdir("assets/static_chairs")
     file = files[random.randint(0, len(files) - 1)]
-    path = f"static/static_chairs/{file}"
+    path = f"assets/static_chairs/{file}"
     resp = {
         "success": True,
         "filepath": path
@@ -39,6 +39,15 @@ def auto_draw():
 @app.route("/generate", methods=["POST"])
 def generate():
     sketch = request.json["imgBase64"]
+
+    # resp = {
+    #     "success": True,
+    #     "results": [{"name": "nisse", "src": "blablabla"}, {'name': "untz", 'src': "atatata"}],
+    #     "original_sketch": "ananananana",
+    #     "generated_chair": "generated_chair"
+    # }
+
+    # return jsonify(resp)
 
     # This code below saves the drawn chair locally
     # with open("demo-chair_3.txt", 'w') as file:
@@ -52,7 +61,7 @@ def generate():
 
     # Get similar products and filter to top 3
     similar_products = get_similar_products(cfg.PRODUCT_SET_ID, generated_chair)  # Generated chair
-    top = sorted(similar_products, key=lambda product: product.score, reverse=True)[:3]
+    top = sorted(similar_products, key=lambda product: product.score, reverse=True)[:4]
     products = [(product.product.display_name, product.image.split("/")[-1], product.score) for product in
                 top] or "No matching products found!"
     images = []
@@ -61,9 +70,16 @@ def generate():
         img_blob = download_blob(storage_client, cfg.BUCKET_NAME, blob_name)
         img_blob = base64.b64encode(img_blob).decode()  # Convert to string so we can add data URI header
         img_blob = add_png_header(img_blob)
-        images.append((product_name, img_blob))
+        images.append({'name': product_name, 'src': img_blob})
 
     generated_chair = add_png_header(generated_chair)
+    resp = {
+        "success": True,
+        "results": images,
+        "original_sketch": sketch,
+        "generated_chair": generated_chair
+    }
+    return jsonify(resp)
     return render_template("results.html", images=images, base64_img=sketch, generated_chair=generated_chair)
 
 

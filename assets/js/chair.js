@@ -1,8 +1,5 @@
 $(document).ready(function () {
-  $(".submit").click(function () {
-    console.log(clickX);
-    console.log(clickY);
-    console.log(clickDrag);
+  $("#submit").click(function () {
     canvasToImg()
     $(".submit").addClass("loading");
     // Fire off vanvas request
@@ -19,8 +16,23 @@ $(document).ready(function () {
     //      $(".failed").removeClass("finish");
     //    }, 5000);  // Wait for response instead of timeout
   })
+  $("#clean").click(function () {
+    // $('#img1').attr("hidden", true);
+    $('.image').each(function(index) {
+      var img = $(this).find('img')[0];
+      img.setAttribute('hidden', true);
+      img.setAttribute('src', '');
+      var title = $(this).find('h4')[0]
+      title.innerHTML = ""; 
+    })
+    clickX.length = 0;
+    clickY.length = 0;
+    clickDrag.length = 0;
+    redraw();
+  })
 
-  $(".test").click(function () {
+
+  $("#random").click(function () {
     // Ask server for files in folder
     $.ajax({
       type: "GET",
@@ -51,14 +63,29 @@ $(document).ready(function () {
   $('#canvas').mousedown(function (e) {
     length = 0;
     paint = true;
-    addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop, false);
-    length = length + 1;
+    var rect = canvas.getBoundingClientRect();  // get element's abs. position
+    var x = e.clientX - rect.left;              // get mouse x and adjust for el.
+    var y = e.clientY - rect.top;               // get mouse y and adjust for el.
+    addClick(x, y, false);
+    console.log(x)
+    console.log(y)
     redraw();
+
+    // var BB=canvas.getBoundingClientRect();
+    // console.log(BB.top);
+    // console.log(canvas.offsetTop);
+    // console.log(e.pageY);
+    // addClick(e.pageX - BB.left, e.pageY - BB.top, false);
+    // length = length + 1;
+    // redraw();
   });
 
   $('#canvas').mousemove(function (e) {
     if (paint) {
-      addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop, true);
+      var rect = canvas.getBoundingClientRect();  // get element's abs. position
+      var x = e.clientX - rect.left;              // get mouse x and adjust for el.
+      var y = e.clientY - rect.top;               // get mouse y and adjust for el.
+      addClick(x, y, true);
       length = length + 1;
       redraw();
     }
@@ -151,7 +178,6 @@ $(document).ready(function () {
 
   function redraw() {
     context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
-
     context.strokeStyle = "#000000";
     context.lineJoin = "round";
     context.lineWidth = 1;
@@ -183,35 +209,42 @@ $(document).ready(function () {
 
     //draw the original canvas onto the destination canvas
     destCtx.drawImage(canvas, 0, 0);
-    console.log(destCtx)
-    console.log("DUmmy canvas");
 
     //finally use the destinationCanvas.toDataURL() method to get the desired output;
     var imgURL = destinationCanvas.toDataURL();
 
-    console.log(imgURL)
+    // console.log(imgURL)
     $.ajax({
       type: "POST",
       url: "generate",
       headers: { 'Content-Type': 'application/json' },
       data: JSON.stringify({
         imgBase64: imgURL,
-        x: clickX,
-        y: clickY,
-        drag: clickDrag
+        // x: clickX,
+        // y: clickY,
+        // drag: clickDrag
       }),
       success: function (data) {
         if (data.success) {
           console.log('Your file was successfully uploaded!');
-          $('body').html(data);
+          // Add new b64 encoded chairs to page
+          // var a = ["a", "b", "c"];
+          $('.image').each(function(index) {
+            var img = $(this).find('img')[0]
+            var title = $(this).find('h4')[0]
+            img.setAttribute("src", data.results[index]['src'])
+            img.removeAttribute('hidden')
+            title.innerHTML = data.results[index]['name']; 
+            img.setAttribute("src", data.results[index]['src'])
+            console.log(img);
+          });
+
         } else {
           console.log('There was an error uploading your file!');
-          $('body').html(data);
         }
       },
       error: function (data) {
         console.log('There was an error uploading your file!');
-        console.log(data.success);
       }
     }).done(function () {
       console.log("Sent");
