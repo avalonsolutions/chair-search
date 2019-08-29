@@ -256,7 +256,10 @@ $(document).ready(function () {
             console.log(img);
           });
           $("#loaderdiv").removeAttr('class', 'loading')
-
+          $('html, body').animate({
+              scrollTop: $("#two").offset().top
+          }, 1000);
+        // });
         } else {
           console.log('There was an error uploading your file!');
         }
