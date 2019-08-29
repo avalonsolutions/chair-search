@@ -6,7 +6,7 @@ from google.cloud import vision
 
 project_id = "chair-search-demo"
 location = "europe-west1"
-
+product_search_client = vision.ProductSearchClient()
 
 def create_product_set(product_set_id, product_set_display_name):
     """Create a product set.
@@ -223,7 +223,6 @@ def get_similar_products(product_set_id, img=None, product_category='homegoods-v
         color:blue AND style:kids
     """
     # product_search_client is needed only for its helper methods.
-    product_search_client = vision.ProductSearchClient()
     image_annotator_client = vision.ImageAnnotatorClient()
 
     content = base64.b64decode(img)
@@ -268,44 +267,5 @@ def get_similar_products(product_set_id, img=None, product_category='homegoods-v
     return results
 
 
-if __name__ == "__main__":
-    product_set_id = 'CHAIRS-PRODUCTSET'
-
-    product_category = "homegoods-v2"
-
-    file_path = "/Users/eliasd/dev/ikea-data/test_result2/model_299965/search.png"
-    file_path = "/Users/eliasd/dev/ikea-data/test_result2/model_299965/tx_000000000000n02738535_419-1-outputs.png"
-    image_folder = "/Users/eliasd/dev/ikea-data/test_result2/model_299965"
-    cropped_folder = "/Users/eliasd/dev/ikea-data/chair_sketch_cropped"
-    image_folder = cropped_folder
-    files = list(filter(lambda x: ".png" in x, os.listdir(image_folder)))
-    rand_int = random.randint(0, 75)
-    image_path = os.path.join(image_folder, files[rand_int])
-
-    # create_product_set(project_id, location, product_set_id, product_set_display_name)
-    # create_product(project_id, location, product_id, product_display_name, product_category)
-    # add_product_to_product_set(project_id, location, product_id, product_set_id)
-    # create_reference_image(project_id, location, product_id, reference_image_id, bucket_path)
-    # list_products()
-    # update_product_labels(project_id, location, product_id, "type", "chair")
-    # get_product(project_id, location, product_id)
-    similar_products = get_similar_products_file(product_set_id, product_category, image_path, filter=None)
-
-    fig = plt.figure()
-
-    img = mpimg.imread(image_path)
-    ax = fig.add_subplot(2, 2, 4)
-    ax.set_title("Generated chair")
-    ax.axis('off')
-    ax.imshow(img)
-    top = sorted(similar_products, key=lambda x: x.score, reverse=True)[:3]
-    products = [(x.product.display_name, x.image.split('/')[-1], x.score) for x in top]
-
-    for index, (display_name, filename, score) in enumerate(products):
-        path = f"scraped_images/{display_name}/{filename}"
-        ax = fig.add_subplot(2, 2, index + 1)
-        ax.axis('off')
-        ax.set_title('%0.2f%% => [%s]' % (score * 100, display_name))
-        img = mpimg.imread(path)
-        ax.imshow(img)
-    plt.show()
+def get_reference_image(name):
+     return product_search_client.get_reference_image(name)
