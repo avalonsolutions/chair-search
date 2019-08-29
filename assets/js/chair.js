@@ -61,6 +61,17 @@ $(document).ready(function () {
 
   canvas = document.getElementById('canvas');
   context = document.getElementById('canvas').getContext("2d");
+  
+  var canvasWrapper = document.getElementById('canvasWrapper');
+  var canvasWrapperStyle = getComputedStyle(canvasWrapper);
+  var widthString = canvasWrapperStyle.getPropertyValue('width').toString();
+  var width = parseInt(widthString.slice(0, widthString.length-2));
+  var heightString = canvasWrapperStyle.getPropertyValue('height').toString();
+  var height = parseInt(heightString.slice(0, heightString.length-2));
+  
+  canvas.width = width;
+  canvas.height = height;
+
   var length = 0;
   $('#canvas').mousedown(function (e) {
     length = 0;
