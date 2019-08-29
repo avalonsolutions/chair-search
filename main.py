@@ -40,20 +40,19 @@ def auto_draw():
 def generate():
     sketch = request.json["imgBase64"]
 
-    # resp = {
-    #     "success": True,
-    #     "results": [{"name": "nisse", "src": "blablabla"}, {'name': "untz", 'src': "atatata"}],
-    #     "original_sketch": "ananananana",
-    #     "generated_chair": "generated_chair"
-    # }
-
-    # return jsonify(resp)
-
     # This code below saves the drawn chair locally
-    # with open("demo-chair_3.txt", 'w') as file:
+    # with open("huijie_something_3.json", 'w') as file:
     #     import json
-    #     request.json.pop('imgBase64')
-    #     file.write(json.dumps(request.json))
+    #     # request.json.pop('imgBase64')
+    #     local_img = {
+    #         'x': request.json['x'],
+    #         'y': request.json['y'],
+    #         'drag': request.json['drag']
+    #     }
+
+    #     local_img['x'] = [str(number) for number in local_img['x']]
+    #     local_img['y'] = [str(number) for number in local_img['y']]
+    #     file.write(json.dumps(local_img))
 
     cropped_sketch = crop_and_resize(sketch)
     model_input = {'image_bytes': {'b64': cropped_sketch}}
