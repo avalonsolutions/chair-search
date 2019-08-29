@@ -16,13 +16,13 @@ with open('/Users/eliasd/dev/chairs-demo-frontend/predrawn/coords3.txt', 'r') as
     for coord in test:
         print(coord)
         x, y = coord.split(',')
-        output['x'].append(str(650 + int(x)))
-        output['y'].append(str(250 + int(y)))
+        output['x'].append(str(700 + int(x)))
+        output['y'].append(str(140 + int(y)))
         output['drag'].append(False)
 
 
 print(output)
 
-with open("predrawn/out/autodrawn_chair_3.json", 'w') as file:
+with open("predrawn/out/autodraw_3.json", 'w') as file:
     import json
     file.write(json.dumps(output))
