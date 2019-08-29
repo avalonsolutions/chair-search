@@ -197,6 +197,8 @@ $(document).ready(function () {
   }
 
   function canvasToImg() {
+    // console.log('+++');
+    $("#loaderdiv").attr('class', 'loading');
     // "Hack" to get a white background for the exported canvas DataURL
     //create a dummy CANVAS
     destinationCanvas = document.createElement("canvas");
@@ -230,7 +232,6 @@ $(document).ready(function () {
         if (data.success) {
           console.log('Your file was successfully uploaded!');
           // Add new b64 encoded chairs to page
-          // var a = ["a", "b", "c"];
           console.log(data)
           $('#generated-title').removeAttr('hidden');
           $('#generated').attr('src', data['generated_chair']);
@@ -243,6 +244,7 @@ $(document).ready(function () {
             img.setAttribute("src", data.results[index]['src'])
             console.log(img);
           });
+          $("#loaderdiv").removeAttr('class', 'loading')
 
         } else {
           console.log('There was an error uploading your file!');
