@@ -1,9 +1,9 @@
 PROJECT_ID = "chair-search-demo"
-BUCKET_NAME = "product-catalogue-data"
+BUCKET_NAME = "product-catalogue-data-v2"
 FOLDER_NAME = "sketches"
 PRODUCT_FOLDER = "scraped_images"
 
-PRODUCT_SET_ID = "CHAIRS-PRODUCTSET"
+PRODUCT_SET_ID = "CHAIRS-PRODUCTSET-V2"
 
 MODEL_VERSION = "v344565"
 
