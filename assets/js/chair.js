@@ -80,8 +80,8 @@ $(document).ready(function () {
     var x = e.clientX - rect.left;              // get mouse x and adjust for el.
     var y = e.clientY - rect.top;               // get mouse y and adjust for el.
     addClick(x, y, false);
-    console.log(x)
-    console.log(y)
+    // console.log(x)
+    // console.log(y)
     redraw();
 
     // var BB=canvas.getBoundingClientRect();
@@ -159,7 +159,6 @@ $(document).ready(function () {
 
 
   function undoLastPoint() {
-    console.log("UNDO")
     // remove the last drawn point from the drawing array
     for (var i = 0; i < length; i++) {
       clickX.pop();
@@ -208,7 +207,6 @@ $(document).ready(function () {
   }
 
   function canvasToImg() {
-    // console.log('+++');
     $("#loaderdiv").attr('class', 'loading');
     // "Hack" to get a white background for the exported canvas DataURL
     //create a dummy CANVAS
@@ -228,7 +226,6 @@ $(document).ready(function () {
     //finally use the destinationCanvas.toDataURL() method to get the desired output;
     var imgURL = destinationCanvas.toDataURL();
 
-    // console.log(imgURL)
     $.ajax({
       type: "POST",
       url: "generate",
@@ -243,7 +240,6 @@ $(document).ready(function () {
         if (data.success) {
           console.log('Your file was successfully uploaded!');
           // Add new b64 encoded chairs to page
-          console.log(data)
           $('#generated-title').removeAttr('hidden');
           $('#generated').attr('src', data['generated_chair']);
           $('.image').each(function (index) {
@@ -253,7 +249,6 @@ $(document).ready(function () {
             img.removeAttribute('hidden')
             title.innerHTML = data.results[index]['name'];
             img.setAttribute("src", data.results[index]['src'])
-            console.log(img);
           });
           $("#loaderdiv").removeAttr('class', 'loading')
           $('html, body').animate({
