@@ -1,5 +1,6 @@
 flask
 google-cloud-storage
+google-cloud-datastore
 google-cloud-vision
 Pillow
 google-api-python-client
