@@ -2,9 +2,11 @@ import base64
 import os
 from datetime import datetime
 import random
+import uuid
+import json
 
 from flask import Flask, render_template, request, redirect, jsonify
-from google.cloud import storage
+from google.cloud import storage, datastore
 
 from vision.product_catalogue import get_similar_products, get_reference_image
 from util import predict_json, crop_and_resize
@@ -16,6 +18,7 @@ if not os.getenv("RUNNING_ON_GCP"):
 app = Flask(__name__, static_folder='assets')
 
 storage_client = storage.Client(project=cfg.PROJECT_ID)
+datastore_client = datastore.Client(project=cfg.PROJECT_ID)
 
 
 @app.route("/index.html")
@@ -56,7 +59,8 @@ def generate():
 
     cropped_sketch = crop_and_resize(sketch)
     model_input = {'image_bytes': {'b64': cropped_sketch}}
-    generated_chair = predict_json(project="chair-search-demo", model="chair_generation", input=model_input, version=cfg.MODEL_VERSION)
+    generated_chair = predict_json(project="chair-search-demo", model="chair_generation",
+                                   input=model_input, version=cfg.MODEL_VERSION)
 
     # Get similar products and filter to top 3
     similar_products = get_similar_products(cfg.PRODUCT_SET_ID, generated_chair)  # Generated chair
@@ -102,6 +106,51 @@ def upload_blob(client, bucket_name, blob, destination_blob_name):
 
 def add_png_header(data):
     return "data:image/png;base64," + data
+
+
+@app.route("/send-sketch", methods=["POST"])
+def send_sketch():
+    req = request.form.to_dict()
+    email = req.get('email')
+    name = req.get('name')
+    sketch = req.get('sketch')
+    x = req.get('x')
+    y = req.get('y')
+    drag = req.get('drag')
+    print(email)
+    print(name)
+
+    coords = {
+        'x': x,
+        'y': y,
+        'drag': drag
+    }
+
+    coords = json.dumps(coords)
+
+    kind = 'DemoUser'
+    ds_id = str(uuid.uuid4())
+    upload_image(ds_id, sketch, coords)
+    demo_user_key = datastore_client.key(kind, ds_id)
+    demo_user = datastore.Entity(key=demo_user_key)
+    demo_user['name'] = name
+    demo_user['email'] = email
+    demo_user['gcs_link'] = f"gs://{cfg.SKETCH_BUCKET}/{ds_id}/"
+
+    datastore_client.put(demo_user)
+
+    return redirect("index.html")
+
+
+def upload_image(ds_id, img, coords):
+    img_dest_blob = f"{ds_id}/base64_image.txt"
+    coords_dest_blob = f"{ds_id}/coordinates.json"
+    bucket = storage_client.get_bucket(cfg.SKETCH_BUCKET)
+    img_blob = bucket.blob(img_dest_blob)
+    coords_blob = bucket.blob(coords_dest_blob)
+
+    img_blob.upload_from_string(img)
+    coords_blob.upload_from_string(coords)
 
 
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 $(document).ready(function () {
   $("#submit").click(function () {
     canvasToImg()
-    $(".submit").addClass("loading");
+    // $("#submit").addClass("loading");
     // Fire off vanvas request
 
     //    setTimeout(function () {
@@ -232,9 +232,9 @@ $(document).ready(function () {
       headers: { 'Content-Type': 'application/json' },
       data: JSON.stringify({
         imgBase64: imgURL,
-        // x: clickX,
-        // y: clickY,
-        // drag: clickDrag
+        x: clickX,
+        y: clickY,
+        drag: clickDrag
       }),
       success: function (data) {
         if (data.success) {
@@ -250,6 +250,10 @@ $(document).ready(function () {
             title.innerHTML = data.results[index]['name'];
             img.setAttribute("src", data.results[index]['src'])
           });
+          $('#email-sketch').attr('value', imgURL)
+          $('#x-form').attr('value', clickX)
+          $('#y-form').attr('value', clickY)
+          $('#drag-form').attr('value', clickDrag)
           $("#loaderdiv").removeAttr('class', 'loading')
           $('html, body').animate({
               scrollTop: $("#two").offset().top

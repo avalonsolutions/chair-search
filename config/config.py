@@ -1,5 +1,6 @@
 PROJECT_ID = "chair-search-demo"
 BUCKET_NAME = "product-catalogue-data-v2"
+SKETCH_BUCKET = "sketch-bucket"
 FOLDER_NAME = "sketches"
 PRODUCT_FOLDER = "scraped_images"
 
