@@ -35,94 +35,94 @@ def predict_json(project, model, input, version=None):
     return response['predictions'][0]['output_bytes']['b64']  # TODO: Make this just return json, not list
 
 
-def crop_image(img):
-    """Crops input image to 256x256. Not used anymore."""
+# def crop_image(img):
+#     """Crops input image to 256x256. Not used anymore."""
 
-    basewidth = 256
-    img = Image.open(io.BytesIO(base64.b64decode(img.split(',')[1])))
-    # img = Image.open('somepic.jpg')
-    wpercent = (basewidth / float(img.size[0]))
-    hsize = int((float(img.size[1]) * float(wpercent)))
-    img = img.resize((basewidth, hsize), Image.ANTIALIAS)
-    # img.save('sompic.jpg')
-    from io import BytesIO
+#     basewidth = 256
+#     img = Image.open(io.BytesIO(base64.b64decode(img.split(',')[1])))
+#     # img = Image.open('somepic.jpg')
+#     wpercent = (basewidth / float(img.size[0]))
+#     hsize = int((float(img.size[1]) * float(wpercent)))
+#     img = img.resize((basewidth, hsize), Image.ANTIALIAS)
+#     # img.save('sompic.jpg')
+#     from io import BytesIO
 
-    buffered = BytesIO()
-    img.save(buffered, format="PNG")
-    img_str = base64.b64encode(buffered.getvalue()).decode()
-    return img_str
-
-
-def sketch(src):
-    """
-    from https://github.com/whigy/pix2pix-tensorflow/blob/master/tools/process.py
-    Not used
-    """
-    # Process sketch to fit input. Only used for test input
-    src = np.asarray(src * 255, np.uint8)
-    # Crop the sketch and minimize white padding.
-    cropped = crop_and_resize(src, return_gray=True)
-    # Skeletonize the lines
-    skeleton = skeletonize(cropped / 255)
-    final = 1 - np.float32(skeleton)
-    return np.asarray(src, np.float32)
+#     buffered = BytesIO()
+#     img.save(buffered, format="PNG")
+#     img_str = base64.b64encode(buffered.getvalue()).decode()
+#     return img_str
 
 
-def crop_and_resize(src, return_gray=False):
-    """
-    from https://github.com/whigy/pix2pix-tensorflow/blob/master/tools/process.py
-    crop edge image to discard white pad, and resize to training size
-    based on: https://stackoverflow.com/questions/48395434/how-to-crop-or-remove-white-background-from-an-image
-    [OBS!] only works on image with white background
-    """
-
-    src = np.array(Image.open(io.BytesIO(base64.b64decode(src.split(',')[1]))))
-    # src = np.array(pillow_image)
-    # processed = crop_and_resize(src)
-    # test = encode(processed)
-
-    height, width, _ = src.shape
-
-    # (1) Convert to gray, and threshold
-    gray = cv2.cvtColor(src, cv2.COLOR_BGR2GRAY)
-    th, threshed = cv2.threshold(gray, 240, 255, cv2.THRESH_BINARY_INV)
-
-    # (2) Morph-op to remove noise
-    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (11, 11))
-    morphed = cv2.morphologyEx(threshed, cv2.MORPH_CLOSE, kernel)
-
-    # (3) Find the max-area contour
-    cnts = cv2.findContours(morphed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[-2]
-    cnt = sorted(cnts, key=cv2.contourArea)[-1]
-
-    # (4) Crop
-    x, y, w, h = cv2.boundingRect(cnt)
-    x_1 = max(x, x - 10)
-    y_1 = max(y, y - 10)
-    x_2 = min(x + w, width)
-    y_2 = min(y + h, height)
-    if return_gray:
-        dst = gray[y_1:y_2, x_1:x_2]
-    else:
-        dst = src[y_1:y_2, x_1:x_2]
-    # pad white to resize
-    height = int(max(0, w - h) / 2.0)
-    width = int(max(0, h - w) / 2.0)
-    padded = cv2.copyMakeBorder(dst, height, height, width, width, cv2.BORDER_CONSTANT, value=[255, 255, 255])
-
-    return encode(np.asarray(cv2.resize(padded, (256, 256), interpolation=cv2.INTER_AREA)))
+# def sketch(src):
+#     """
+#     from https://github.com/whigy/pix2pix-tensorflow/blob/master/tools/process.py
+#     Not used
+#     """
+#     # Process sketch to fit input. Only used for test input
+#     src = np.asarray(src * 255, np.uint8)
+#     # Crop the sketch and minimize white padding.
+#     cropped = crop_and_resize(src, return_gray=True)
+#     # Skeletonize the lines
+#     skeleton = skeletonize(cropped / 255)
+#     final = 1 - np.float32(skeleton)
+#     return np.asarray(src, np.float32)
 
 
-def encode(image) -> str:
-    # convert image to bytes
-    with io.BytesIO() as output_bytes:
-        PIL_image = Image.fromarray(skimage.img_as_ubyte(image))
-        PIL_image.save(output_bytes, 'PNG')  # Note JPG is not a vaild type here
-        bytes_data = output_bytes.getvalue()
+# def crop_and_resize(src, return_gray=False):
+#     """
+#     from https://github.com/whigy/pix2pix-tensorflow/blob/master/tools/process.py
+#     crop edge image to discard white pad, and resize to training size
+#     based on: https://stackoverflow.com/questions/48395434/how-to-crop-or-remove-white-background-from-an-image
+#     [OBS!] only works on image with white background
+#     """
 
-    # encode bytes to base64 string
-    base64_str = str(base64.b64encode(bytes_data), 'utf-8')
-    return base64_str
+#     src = np.array(Image.open(io.BytesIO(base64.b64decode(src.split(',')[1]))))
+#     # src = np.array(pillow_image)
+#     # processed = crop_and_resize(src)
+#     # test = encode(processed)
+
+#     height, width, _ = src.shape
+
+#     # (1) Convert to gray, and threshold
+#     gray = cv2.cvtColor(src, cv2.COLOR_BGR2GRAY)
+#     th, threshed = cv2.threshold(gray, 240, 255, cv2.THRESH_BINARY_INV)
+
+#     # (2) Morph-op to remove noise
+#     kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (11, 11))
+#     morphed = cv2.morphologyEx(threshed, cv2.MORPH_CLOSE, kernel)
+
+#     # (3) Find the max-area contour
+#     cnts = cv2.findContours(morphed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[-2]
+#     cnt = sorted(cnts, key=cv2.contourArea)[-1]
+
+#     # (4) Crop
+#     x, y, w, h = cv2.boundingRect(cnt)
+#     x_1 = max(x, x - 10)
+#     y_1 = max(y, y - 10)
+#     x_2 = min(x + w, width)
+#     y_2 = min(y + h, height)
+#     if return_gray:
+#         dst = gray[y_1:y_2, x_1:x_2]
+#     else:
+#         dst = src[y_1:y_2, x_1:x_2]
+#     # pad white to resize
+#     height = int(max(0, w - h) / 2.0)
+#     width = int(max(0, h - w) / 2.0)
+#     padded = cv2.copyMakeBorder(dst, height, height, width, width, cv2.BORDER_CONSTANT, value=[255, 255, 255])
+
+#     return encode(np.asarray(cv2.resize(padded, (256, 256), interpolation=cv2.INTER_AREA)))
+
+
+# def encode(image) -> str:
+#     # convert image to bytes
+#     with io.BytesIO() as output_bytes:
+#         PIL_image = Image.fromarray(skimage.img_as_ubyte(image))
+#         PIL_image.save(output_bytes, 'PNG')  # Note JPG is not a vaild type here
+#         bytes_data = output_bytes.getvalue()
+
+#     # encode bytes to base64 string
+#     base64_str = str(base64.b64encode(bytes_data), 'utf-8')
+#     return base64_str
 
 
 if __name__ == '__main__':

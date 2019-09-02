@@ -7,9 +7,10 @@ import json
 
 from flask import Flask, render_template, request, redirect, jsonify
 from google.cloud import storage, datastore
+import requests
 
 from vision.product_catalogue import get_similar_products, get_reference_image
-from util import predict_json, crop_and_resize
+from util import predict_json
 from config import config as cfg
 
 if not os.getenv("RUNNING_ON_GCP"):
@@ -57,10 +58,12 @@ def generate():
     #     local_img['y'] = [str(number) for number in local_img['y']]
     #     file.write(json.dumps(local_img))
 
-    cropped_sketch = crop_and_resize(sketch)
-    model_input = {'image_bytes': {'b64': cropped_sketch}}
+    payload = {
+        "img": sketch.split(',')[1]
+    }
+    cropped_sketch = requests.post(cfg.PREPROCESS_URL, json=payload).json()
     generated_chair = predict_json(project="chair-search-demo", model="chair_generation",
-                                   input=model_input, version=cfg.MODEL_VERSION)
+                                   input=cropped_sketch, version=cfg.MODEL_VERSION)
 
     # Get similar products and filter to top 3
     similar_products = get_similar_products(cfg.PRODUCT_SET_ID, generated_chair)  # Generated chair
@@ -112,7 +115,7 @@ def add_png_header(data):
 def send_sketch():
     """Save sketch and sketch coordinates to Datastore and GCS"""
     # TODO: Make this prettier :)
-    req = request.form.to_dict()
+    req = request.get_json()
     email = req.get('email')
     name = req.get('name')
     sketch = req.get('sketch')
@@ -123,7 +126,8 @@ def send_sketch():
     }
 
     coords = json.dumps(coords)
-
+    if not email or not name:
+        return redirect("index.html")
     kind = 'DemoUser'
     ds_id = str(uuid.uuid4())
     upload_image(ds_id, sketch, coords)
