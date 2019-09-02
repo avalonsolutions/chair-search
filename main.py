@@ -110,20 +110,16 @@ def add_png_header(data):
 
 @app.route("/send-sketch", methods=["POST"])
 def send_sketch():
+    """Save sketch and sketch coordinates to Datastore and GCS"""
+    # TODO: Make this prettier :)
     req = request.form.to_dict()
     email = req.get('email')
     name = req.get('name')
     sketch = req.get('sketch')
-    x = req.get('x')
-    y = req.get('y')
-    drag = req.get('drag')
-    print(email)
-    print(name)
-
     coords = {
-        'x': x,
-        'y': y,
-        'drag': drag
+        'x': req.get('x'),
+        'y': req.get('y'),
+        'drag': req.get('drag')
     }
 
     coords = json.dumps(coords)
