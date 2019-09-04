@@ -1,21 +1,30 @@
 $(document).ready(function () {
   $("#submit").click(function () {
     canvasToImg()
-    // $("#submit").addClass("loading");
-    // Fire off vanvas request
-
-    //    setTimeout(function () {
-    //      $(".submit").addClass("hide-loading");
-    // For failed icon just replace ".done" with ".failed"
-    //      $(".done").addClass("finish");
-    //    }, 3000);
-    //    setTimeout(function () {
-    //      $(".submit").removeClass("loading");
-    //      $(".submit").removeClass("hide-loading");
-    //      $(".done").removeClass("finish");
-    //      $(".failed").removeClass("finish");
-    //    }, 5000);  // Wait for response instead of timeout
   })
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const sketchId = urlParams.get('sketch_id');
+  if (sketchId != null) {
+    $.ajax({
+      type: "GET",
+      url: "autoDraw?sketch_id=" + sketchId,
+      success: function (data) {
+        if (data.success) {
+          clickX = data.x;
+          clickY = data.y;
+          clickDrag = data.drag;
+          redraw();
+        } else {
+          console.log('ERRROR');
+        }
+      },
+      error: function (data) {
+      }
+    }).done(function () {
+    });
+  }
+
   $("#clean").click(function () {
     $('.image').each(function (index) {
       var img = $(this).find('img')[0];
@@ -54,7 +63,6 @@ $(document).ready(function () {
       error: function (data) {
       }
     }).done(function () {
-      console.log("Sent");
     });
   })
 
@@ -76,7 +84,6 @@ $(document).ready(function () {
       error: function (data) {
       }
     }).done(function () {
-      console.log("Sent");
     });
   })
 
@@ -284,7 +291,6 @@ $(document).ready(function () {
         console.log('There was an error uploading your file!');
       }
     }).done(function () {
-      console.log("Sent");
     });
   }
   document.onkeydown = KeyPress;

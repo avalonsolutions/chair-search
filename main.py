@@ -30,6 +30,24 @@ def root():
 
 @app.route('/autoDraw')
 def auto_draw():
+    if request.args.get('sketch_id'):
+        source_blob_name = f"{request.args.get('sketch_id')}/coordinates.json"
+        sketch_coords = json.loads(download_blob(storage_client, cfg.SKETCH_BUCKET, source_blob_name))
+
+        # Backwards compatibility check
+        if isinstance(sketch_coords['drag'], str):
+            for key, value in sketch_coords.items():
+                sketch_coords[key] = value.split(',')
+            sketch_coords['drag'] = ['true' in x for x in sketch_coords['drag']]
+        
+        resp = {
+            "success": True,
+            "x": sketch_coords['x'],
+            "y": sketch_coords['y'],
+            "drag": sketch_coords['drag']
+        }
+        return jsonify(resp)
+
     files = os.listdir("assets/static_chairs")
     file = files[random.randint(0, len(files) - 1)]
     path = f"assets/static_chairs/{file}"
@@ -87,7 +105,6 @@ def generate():
         "generated_chair": generated_chair
     }
     return jsonify(resp)
-    return render_template("results.html", images=images, base64_img=sketch, generated_chair=generated_chair)
 
 
 def download_blob(client, bucket_name, source_blob_name):
@@ -120,9 +137,9 @@ def send_sketch():
     name = req.get('name')
     sketch = req.get('sketch')
     coords = {
-        'x': req.get('x'),
-        'y': req.get('y'),
-        'drag': req.get('drag')
+        'x': req.get('x').split(','),
+        'y': req.get('y').split(','),
+        'drag': ["true" in x for x in req.get('drag').split(',')]
     }
 
     coords = json.dumps(coords)
