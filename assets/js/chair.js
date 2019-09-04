@@ -269,7 +269,7 @@ $(document).ready(function () {
           $('#generated').attr('src', data['generated_chair']);
           $('.image').each(function (index) {
             var img = $(this).find('img')[0]
-            // img.css({display: "block"});
+            img.style.display = 'block';
             var title = $(this).find('h4')[0]
             img.setAttribute("src", data.results[index]['src'])
             img.removeAttribute('hidden')

@@ -105,7 +105,6 @@ def generate():
         "generated_chair": generated_chair
     }
 
-    print(resp['results'])
     return jsonify(resp)
 
 
