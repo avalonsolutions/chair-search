@@ -7,6 +7,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 	<link rel="stylesheet" href="assets/css/main.css" />
 	<link rel="stylesheet" href="assets/css/loader.css" />
+	<script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/v2.js"></script>
 	<noscript>
 		<link rel="stylesheet" href="assets/css/noscript.css" />
 	</noscript>
@@ -16,6 +17,8 @@
 
 	<!-- Sidebar -->
 	<section id="sidebar">
+		<img src="assets/images/avalon-logo-white-website.png" width="50%">
+		<br/>Draw your dream chair. <br/>We will do the rest.
 		<div class="inner">
 			<nav>
 				<ul>
@@ -50,8 +53,7 @@
 				<div class="content">
 					<div class="inner">
 						<h2>Draw a chair</h2>
-						<p>Use your imagination to draw a chair and nothing else. We will use AI to generate a chair and then match that to
-							common IKEA products.</p>
+						<p>Use your talent to draw the chair of your dreams. We will try our best to find the IKEA products that best suit your needs.</p>
 					</div>
 				</div>
 			</section>
@@ -79,7 +81,7 @@
 		<!-- Two -->
 		<section id="two" class="wrapper style3 fade-up">
 			<div class="inner">
-				<h2>Results</h2>
+				<h2 style="color: #0051BA">Results</h2>
 				<h4 id="generated-title" hidden="true">Your GAN generated chair</h4>
 				<img id="generated" src="" style="display: block; margin-bottom: 10px; margin-left: auto; margin-right: auto; width: 50%; max-width: 50%">
 				<div class="features">
@@ -107,45 +109,43 @@
 		<!-- Three -->
 		<section id="three" class="wrapper style1 fade-up">
 			<div class="inner">
-				<h2>Get in touch</h2>
-				<p>Want to build smth cool bla bla..</p>
+				<h2>Want to receive your sketch by email?</h2>
+				<!-- <p>Want to build smth cool bla bla..</p> -->
 				<div class="split style1">
 					<section>
 						<form method="post" action="/send-sketch">
-							<div class="fields">
-								<div class="field half">
-									<label for="name">Name</label>
-									<input type="text" name="name" id="name" />
-								</div>
-								<div class="field half">
-									<label for="email">Email</label>
-									<input type="text" name="email" id="email" />
-								</div>
-								<div class="field half" hidden="true">
-									<label for="sketch"></label>
-									<input type="text" name="sketch" id="email-sketch" />
-								</div>
-								<div class="field half" hidden="true">
-									<label for="x"></label>
-									<input type="text" name="x" id="x-form" />
-								</div>
-								<div class="field half" hidden="true">
-									<label for="y"></label>
-									<input type="text" name="y" id="y-form" />
-								</div>
-								<div class="field half" hidden="true">
-									<label for="drag"></label>
-									<input type="text" name="drag" id="drag-form" />
-								</div>
-								<!-- <div class="field"> -->
-								<!-- <label for="message">Message</label> -->
-								<!-- <textarea name="message" id="message" rows="5"></textarea> -->
-								<!-- </div> -->
+							<!-- <div class="fields"> -->
+							<!-- <div class="field half"> -->
+							<!-- <label for="name">Name</label> -->
+							<!-- <input type="text" name="name" id="name" /> -->
+							<!-- </div> -->
+							<!-- <div class="field half"> -->
+							<!-- <label for="email">Email</label> -->
+							<!-- <input type="text" name="email" id="email" /> -->
+							<!-- </div> -->
+							<div class="field half" hidden="true">
+								<label for="sketch"></label>
+								<input type="text" name="sketch" id="email-sketch" />
 							</div>
-							<ul class="actions">
-								<li><a href="" class="button submit">Send my sketch</a></li>
-							</ul>
+							<div class="field half" hidden="true">
+								<label for="x"></label>
+								<input type="text" name="x" id="x-form" />
+							</div>
+							<div class="field half" hidden="true">
+								<label for="y"></label>
+								<input type="text" name="y" id="y-form" />
+							</div>
+							<div class="field half" hidden="true">
+								<label for="drag"></label>
+								<input type="text" name="drag" id="drag-form" />
+							</div>
 						</form>
+						<script>
+							hbspt.forms.create({
+								portalId: "5227544",
+								formId: "1498f4f2-f2d6-4df0-a8e8-c385388f842f"
+							});
+						</script>
 					</section>
 					<section>
 						<ul class="contact">
@@ -159,17 +159,10 @@
 								<h3>Email</h3>
 								<a href="sweden_sales@avalonsolutions.com">sweden_sales@avalonsolutions.com</a>
 							</li>
-							<!-- <li> -->
-							<!-- <h3>Phone</h3> -->
-							<!-- <span>(000) 000-0000</span> -->
-							<!-- </li> -->
 							<li>
 								<h3>Social</h3>
 								<ul class="icons">
-									<!-- <li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li> -->
-									<!-- <li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li> -->
 									<li><a href="https://github.com/avalonsolutions" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
-									<!-- <li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li> -->
 									<li><a href="https://www.linkedin.com/company/avalonsolutions/" class="icon brands fa-linkedin-in"><span class="label">LinkedIn</span></a></li>
 								</ul>
 							</li>
@@ -200,6 +193,11 @@
 	<script src="assets/js/util.js"></script>
 	<script src="assets/js/main.js"></script>
 	<script src="assets/js/chair.js"></script>
+	<!-- <script> -->
+	<!-- var submitButton = $('.hs-button'); -->
+	<!-- submitButton.removeClass(); -->
+	<!-- submitButton.attr('class', 'button submit'); -->
+	<!-- </script> -->
 </body>
 
 </html>

@@ -17,7 +17,6 @@ $(document).ready(function () {
     //    }, 5000);  // Wait for response instead of timeout
   })
   $("#clean").click(function () {
-    // $('#img1').attr("hidden", true);
     $('.image').each(function (index) {
       var img = $(this).find('img')[0];
       img.setAttribute('hidden', true);
@@ -59,16 +58,38 @@ $(document).ready(function () {
     });
   })
 
+  $(document).on("click", ".hs-button", function () {
+    $.ajax({
+      type: "POST",
+      url: "send-sketch",
+      headers: { 'Content-Type': 'application/json' },
+      data: JSON.stringify({
+        sketch:  $('#email-sketch').val(),
+        x: $('#x-form').val(),
+        y: $('#y-form').val(),
+        drag: $('#drag-form').val(),
+        name: $('#firstname-1498f4f2-f2d6-4df0-a8e8-c385388f842f').val(),
+        email: $('#email-1498f4f2-f2d6-4df0-a8e8-c385388f842f').val()
+      }),
+      success: function (data) {
+      },
+      error: function (data) {
+      }
+    }).done(function () {
+      console.log("Sent");
+    });
+  })
+
   canvas = document.getElementById('canvas');
   context = document.getElementById('canvas').getContext("2d");
-  
+
   var canvasWrapper = document.getElementById('canvasWrapper');
   var canvasWrapperStyle = getComputedStyle(canvasWrapper);
   var widthString = canvasWrapperStyle.getPropertyValue('width').toString();
-  var width = parseInt(widthString.slice(0, widthString.length-2));
+  var width = parseInt(widthString.slice(0, widthString.length - 2));
   var heightString = canvasWrapperStyle.getPropertyValue('height').toString();
-  var height = parseInt(heightString.slice(0, heightString.length-2));
-  
+  var height = parseInt(heightString.slice(0, heightString.length - 2));
+
   canvas.width = width;
   canvas.height = height;
 
@@ -80,17 +101,7 @@ $(document).ready(function () {
     var x = e.clientX - rect.left;              // get mouse x and adjust for el.
     var y = e.clientY - rect.top;               // get mouse y and adjust for el.
     addClick(x, y, false);
-    // console.log(x)
-    // console.log(y)
     redraw();
-
-    // var BB=canvas.getBoundingClientRect();
-    // console.log(BB.top);
-    // console.log(canvas.offsetTop);
-    // console.log(e.pageY);
-    // addClick(e.pageX - BB.left, e.pageY - BB.top, false);
-    // length = length + 1;
-    // redraw();
   });
 
   $('#canvas').mousemove(function (e) {
@@ -123,31 +134,37 @@ $(document).ready(function () {
       length = 0;
       var e = e.touches[0]
       paint = true;
-      addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop, false);
+      var rect = canvas.getBoundingClientRect();  // get element's abs. position
+      var x = e.clientX - rect.left;              // get mouse x and adjust for el.
+      var y = e.clientY - rect.top;               // get mouse y and adjust for el.
+      addClick(x, y, false);
       length = length + 1;
       redraw();
     }
-  }, false);
+  }, {passive: false});
 
   document.addEventListener('touchmove', function (e) {
     if (e.target == canvas) {
       e.preventDefault();
       var e = e.touches[0];
       if (paint) {
-        addClick(e.pageX - canvas.offsetLeft, e.pageY - canvas.offsetTop, true);
+        var rect = canvas.getBoundingClientRect();  // get element's abs. position
+        var x = e.clientX - rect.left;              // get mouse x and adjust for el.
+        var y = e.clientY - rect.top;               // get mouse y and adjust for el.
+        addClick(x, y, true);
         length = length + 1;
         redraw();
       }
     }
 
-  }, false);
+  }, {passive: false});
 
   document.addEventListener('touchend', function (e) {
     if (e.target == canvas) {
       e.preventDefault();
       paint = false;
     }
-  }, false);
+  }, {passive: false});
 
   document.addEventListener('touchcancel', function (e) {
     if (e.target == canvas) {
@@ -155,7 +172,7 @@ $(document).ready(function () {
       paint = false;
     }
 
-  }, false);
+  }, {passive: false});
 
 
   function undoLastPoint() {
@@ -256,9 +273,9 @@ $(document).ready(function () {
           $('#drag-form').attr('value', clickDrag)
           $("#loaderdiv").removeAttr('class', 'loading')
           $('html, body').animate({
-              scrollTop: $("#two").offset().top
+            scrollTop: $("#two").offset().top
           }, 1000);
-        // });
+          // });
         } else {
           console.log('There was an error uploading your file!');
         }
@@ -271,4 +288,6 @@ $(document).ready(function () {
     });
   }
   document.onkeydown = KeyPress;
+
+
 })
