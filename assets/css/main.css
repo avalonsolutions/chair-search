@@ -1846,6 +1846,10 @@ input, select, textarea {
 		text-decoration: none;
 		text-transform: uppercase;
 		white-space: nowrap;
+		/* vg: controls position of action buttons */
+		margin-bottom: 2em;
+		margin-left: 1em;
+		margin-top: 2em;
 	}
 
 		input[type="submit"]:after,

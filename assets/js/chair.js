@@ -97,8 +97,9 @@ $(document).ready(function () {
   var heightString = canvasWrapperStyle.getPropertyValue('height').toString();
   var height = parseInt(heightString.slice(0, heightString.length - 2));
 
-  canvas.width = width;
-  canvas.height = height;
+  // vg: controls relative size of canvas with respect to section size
+  canvas.width = width*.5;
+  canvas.height = height*.9;
 
   var length = 0;
   $('#canvas').mousedown(function (e) {
