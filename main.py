@@ -120,9 +120,9 @@ def send_sketch():
     name = req.get('name')
     sketch = req.get('sketch')
     coords = {
-        'x': req.get('x'),
-        'y': req.get('y'),
-        'drag': req.get('drag')
+        'x': req.get('x').split(','),
+        'y': req.get('y').split(','),
+        'drag': req.get('drag').split(',')
     }
 
     coords = json.dumps(coords)
